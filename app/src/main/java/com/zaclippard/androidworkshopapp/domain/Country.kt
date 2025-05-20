@@ -9,4 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class Country(
     val name: String,
     val capital: String,
+    val flagUrl: String,
+    val population: Long,
+    val area: Float,
 ) : Parcelable

@@ -6,5 +6,8 @@ import com.squareup.moshi.JsonClass
 data class CountryDto(
     val name: CountryNameDto,
     val capital: List<String>?,
+    val flags: CountryFlagDto,
+    val population: Long,
+    val area: Float,
 )
 

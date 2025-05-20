@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.squareup.moshi.Moshi
 import com.zaclippard.androidworkshopapp.domain.Country
+import com.zaclippard.androidworkshopapp.presentation.ui.screens.about.AboutScreen
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrydetails.CountryDetailsScreen
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListScreen
 
@@ -20,15 +21,20 @@ fun AppNavHost() {
 
     NavHost(navController, startDestination = ScreenRoute.CountryList.route) {
         composable(ScreenRoute.CountryList.route) {
-            CountryListScreen { country ->
-                val countryJson = Uri.encode(
-                    Moshi.Builder()
-                        .build()
-                        .adapter(Country::class.java)
-                        .toJson(country)
-                )
-                navController.navigate(ScreenRoute.CountryDetails.createRoute(countryJson))
-            }
+            CountryListScreen(
+                onCountryClick = { country ->
+                    val countryJson = Uri.encode(
+                        Moshi.Builder()
+                            .build()
+                            .adapter(Country::class.java)
+                            .toJson(country)
+                    )
+                    navController.navigate(ScreenRoute.CountryDetails.createRoute(countryJson))
+                },
+                onAboutClick = {
+                    navController.navigate(ScreenRoute.About.path)
+                },
+            )
         }
 
         composable(
@@ -47,6 +53,10 @@ fun AppNavHost() {
             CountryDetailsScreen(country) {
                 navController.navigateUp()
             }
+        }
+
+        composable(ScreenRoute.About.path) {
+            AboutScreen { navController.navigateUp() }
         }
     }
 }

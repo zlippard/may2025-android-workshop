@@ -5,4 +5,9 @@
     <string name="country_name">Name: %1$s</string>
     <string name="country_capital">Capital: %1$s</string>
     <string name="nav_back_content_description">Back</string>
+    <string name="country_population">Population: %1$s</string>
+    <string name="country_area">Area: %1$s</string>
+    <string name="country_flag_content_description">Country Flag</string>
+    <string name="about_title">About</string>
+    <string name="about_content_description">About</string>
 </resources>

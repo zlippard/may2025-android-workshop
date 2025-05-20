@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,6 +34,7 @@ import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableErr
 fun CountryListScreen(
     viewModel: CountryListViewModel = viewModel(),
     onCountryClick: (Country) -> Unit,
+    onAboutClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -40,7 +45,15 @@ fun CountryListScreen(
                 title = {
                     Text(stringResource(R.string.country_title))
                 },
-                navigationIcon = {}
+                navigationIcon = {},
+                actions = {
+                    IconButton(onClick = onAboutClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Info,
+                            contentDescription = stringResource(id = R.string.about_content_description),
+                        )
+                    }
+                }
             )
         },
     ) { innerPadding ->

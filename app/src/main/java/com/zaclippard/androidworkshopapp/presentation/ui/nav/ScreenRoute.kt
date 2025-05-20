@@ -18,4 +18,8 @@ sealed interface ScreenRoute {
             return "$path/$countryJson"
         }
     }
+
+    data object About : ScreenRoute {
+        override val path = "about"
+    }
 }

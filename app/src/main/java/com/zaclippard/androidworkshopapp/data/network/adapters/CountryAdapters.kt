@@ -4,6 +4,7 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonQualifier
 import com.squareup.moshi.ToJson
 import com.zaclippard.androidworkshopapp.data.network.dto.CountryDto
+import com.zaclippard.androidworkshopapp.data.network.dto.CountryFlagDto
 import com.zaclippard.androidworkshopapp.data.network.dto.CountryNameDto
 import com.zaclippard.androidworkshopapp.domain.Country
 
@@ -18,6 +19,9 @@ class CountryAdapter {
         Country(
             name = countryDto.name.common,
             capital = countryDto.capital?.firstOrNull() ?: "N/A",
+            flagUrl = countryDto.flags.png,
+            population = countryDto.population,
+            area = countryDto.area,
         )
     }
 
@@ -26,6 +30,9 @@ class CountryAdapter {
         CountryDto(
             name = CountryNameDto(common = country.name),
             capital = listOf(country.capital),
+            flags = CountryFlagDto(png = country.flagUrl),
+            population = country.population,
+            area = country.area,
         )
     }
 }
