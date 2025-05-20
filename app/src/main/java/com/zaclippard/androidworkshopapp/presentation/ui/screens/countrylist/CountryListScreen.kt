@@ -1,0 +1,90 @@
+package com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.zaclippard.androidworkshopapp.R
+import com.zaclippard.androidworkshopapp.domain.Country
+import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableError
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CountryListScreen(
+    viewModel: CountryListViewModel = viewModel(),
+    onCountryClick: (Country) -> Unit,
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
+        modifier = Modifier.Companion.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(R.string.country_title))
+                },
+                navigationIcon = {}
+            )
+        },
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            when (val state = uiState) {
+                is CountryListUiState.Loading -> CircularProgressIndicator()
+                is CountryListUiState.Ready -> CountryList(state.countries, onCountryClick)
+                is CountryListUiState.Error -> RetryableError(state.message) {
+                    viewModel.handleIntent(CountryListIntent.Retry)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CountryList(
+    countries: List<Country>,
+    onCountryClick: (Country) -> Unit,
+) {
+    LazyColumn {
+        items(countries) { country ->
+            Country(country) {
+                onCountryClick(country)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Country(country: Country, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+        onClick = onClick,
+    ) {
+        Column {
+            Text(stringResource(R.string.country_name, country.name))
+            Text(stringResource(R.string.country_capital, country.capital))
+        }
+    }
+}
+

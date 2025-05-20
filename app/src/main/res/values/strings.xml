@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">AndroidWorkshopApp</string>
-    <string name="image_description">Android Wave</string>
-    <string name="text_view_1">Text View 1</string>
-    <string name="text_view_2">Text View 2</string>
+    <string name="country_title">Countries</string>
+    <string name="error_retry">Retry</string>
+    <string name="country_name">Name: %1$s</string>
+    <string name="country_capital">Capital: %1$s</string>
+    <string name="nav_back_content_description">Back\n</string>
 </resources>

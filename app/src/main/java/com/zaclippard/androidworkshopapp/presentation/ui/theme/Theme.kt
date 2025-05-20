@@ -1,6 +1,5 @@
-package com.zaclippard.androidworkshopapp.ui.theme
+package com.zaclippard.androidworkshopapp.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

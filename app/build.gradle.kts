@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.androidx.navigation.safeargs)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -61,10 +62,18 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.moshi.converter)
+    ksp(libs.moshiCodeGen)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
