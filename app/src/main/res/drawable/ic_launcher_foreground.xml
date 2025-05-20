@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Android head -->
+    <path
+        android:fillColor="#5A8E4A"
+        android:pathData="M34,40 h40 a4,4 0 0,1 4,4 v20 h-48 v-20 a4,4 0 0,1 4,-4z" />
+
+    <!-- Android eyes -->
+    <path
+        android:fillColor="#F4E4CC"
+        android:pathData="M44,50a2,2 0 1,0 0.1,0z" />
+    <path
+        android:fillColor="#F4E4CC"
+        android:pathData="M64,50a2,2 0 1,0 0.1,0z" />
+
+    <!-- Antennas -->
+    <path
+        android:strokeWidth="2"
+        android:strokeColor="#5A8E4A"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M38,40 l-8,-10" />
+    <path
+        android:strokeWidth="2"
+        android:strokeColor="#5A8E4A"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M70,40 l8,-10" />
+
+</vector>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/workshop_nav"
+    app:startDestination="@id/firstWorkshopFragment">
+
+    <fragment
+        android:id="@+id/firstWorkshopFragment"
+        android:name="com.zaclippard.androidworkshopapp.ui.fragments.FirstWorkshopFragment"
+        android:label="FirstWorkshopFragment" >
+        <action
+            android:id="@+id/action_firstWorkshopFragment_to_secondWorkshopFragment"
+            app:destination="@id/secondWorkshopFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/secondWorkshopFragment"
+        android:name="com.zaclippard.androidworkshopapp.ui.fragments.SecondWorkshopFragment"
+        android:label="FirstWorkshopFragment" >
+        <argument
+            android:name="book"
+            app:argType="com.zaclippard.androidworkshopapp.models.Book" />
+    </fragment>
+
+</navigation>
