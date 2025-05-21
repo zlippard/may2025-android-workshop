@@ -32,7 +32,7 @@ import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableErr
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryListScreen(
-    viewModel: CountryListViewModel = viewModel(),
+    viewModel: CountryListViewModel = viewModel(factory = CountryListViewModel.Factory),
     onCountryClick: (Country) -> Unit,
     onAboutClick: () -> Unit,
 ) {
