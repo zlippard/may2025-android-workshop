@@ -4,5 +4,5 @@
     <string name="error_retry">Retry</string>
     <string name="country_name">Name: %1$s</string>
     <string name="country_capital">Capital: %1$s</string>
-    <string name="nav_back_content_description">Back\n</string>
+    <string name="nav_back_content_description">Back</string>
 </resources>

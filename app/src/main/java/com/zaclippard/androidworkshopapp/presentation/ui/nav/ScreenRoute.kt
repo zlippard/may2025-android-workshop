@@ -1,13 +1,21 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.nav
 
 sealed interface ScreenRoute {
-    val path: String
+    val route: String
 
     data object CountryList : ScreenRoute {
-        override val path = "country-list"
+        override val route = "country-list"
     }
 
     data object CountryDetails : ScreenRoute {
-        override val path = "country-details"
+        const val COUNTRY_PARAM = "country"
+
+        private val path = "country-details"
+
+        override val route = "$path/{$COUNTRY_PARAM}"
+
+        fun createRoute(countryJson: String): String {
+            return "$path/$countryJson"
+        }
     }
 }
