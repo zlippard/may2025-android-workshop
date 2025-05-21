@@ -20,6 +20,13 @@ sealed interface ScreenRoute {
     }
 
     data object About : ScreenRoute {
-        override val path = "about"
+        const val NAME_PARAM = "name"
+        private val path = "about"
+
+        override val route = "$path/{$NAME_PARAM}"
+
+        fun createRoute(name: String): String {
+            return "$path/$name"
+        }
     }
 }

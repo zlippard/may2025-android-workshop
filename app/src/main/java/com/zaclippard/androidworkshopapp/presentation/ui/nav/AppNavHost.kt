@@ -32,13 +32,13 @@ fun AppNavHost() {
                     navController.navigate(ScreenRoute.CountryDetails.createRoute(countryJson))
                 },
                 onAboutClick = {
-                    navController.navigate(ScreenRoute.About.path)
+                    navController.navigate(ScreenRoute.About.createRoute("Zac"))
                 },
             )
         }
 
         composable(
-            ScreenRoute.CountryDetails.route,
+            route = ScreenRoute.CountryDetails.route,
             arguments = listOf(
                 navArgument(ScreenRoute.CountryDetails.COUNTRY_PARAM) {
                     type = CountryArgType()
@@ -55,8 +55,17 @@ fun AppNavHost() {
             }
         }
 
-        composable(ScreenRoute.About.path) {
-            AboutScreen { navController.navigateUp() }
+        composable(
+            route = ScreenRoute.About.route,
+            arguments = listOf(
+                navArgument(ScreenRoute.About.NAME_PARAM) {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString(ScreenRoute.About.NAME_PARAM)
+                ?: throw Exception("Name is required!")
+            AboutScreen(name) { navController.navigateUp() }
         }
     }
 }

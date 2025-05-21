@@ -20,6 +20,7 @@ import com.zaclippard.androidworkshopapp.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
+    name: String,
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -41,7 +42,7 @@ fun AboutScreen(
         },
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("This is a really cool app!")
+            Text("Hello, $name! This is a really cool app!")
         }
     }
 }
