@@ -21,19 +21,6 @@ class CountryListViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            countryRepository.countryListResultStream
-                .collect { result ->
-                    _uiState.value = if (result.isSuccess) {
-                        CountryListUiState.Ready(result.getOrNull() ?: emptyList())
-                    } else {
-                        CountryListUiState.Error(
-                            result.exceptionOrNull()?.message ?: "Unknown error. Please try again."
-                        )
-                    }
-                }
-        }
-
         fetchCountries()
     }
 
@@ -47,7 +34,14 @@ class CountryListViewModel(
         _uiState.value = CountryListUiState.Loading
 
         viewModelScope.launch {
-            countryRepository.fetchCountries()
+            val result = countryRepository.fetchCountries()
+            _uiState.value = if (result.isSuccess) {
+                CountryListUiState.Data.Ready(result.getOrNull() ?: emptyList())
+            } else {
+                CountryListUiState.Error(
+                    result.exceptionOrNull()?.message ?: "Unknown error. Please try again."
+                )
+            }
         }
     }
 
