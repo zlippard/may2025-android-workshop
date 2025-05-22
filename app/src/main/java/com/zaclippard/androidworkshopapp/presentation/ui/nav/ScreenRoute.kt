@@ -8,14 +8,14 @@ sealed interface ScreenRoute {
     }
 
     data object CountryDetails : ScreenRoute {
-        const val COUNTRY_PARAM = "country"
+        const val COUNTRY_INDEX_PARAM = "countryIndex"
 
         private val path = "country-details"
 
-        override val route = "$path/{$COUNTRY_PARAM}"
+        override val route = "$path/{$COUNTRY_INDEX_PARAM}"
 
-        fun createRoute(countryJson: String): String {
-            return "$path/$countryJson"
+        fun createRoute(countryIndex: Int): String {
+            return "$path/$countryIndex"
         }
     }
 

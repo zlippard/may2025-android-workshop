@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
@@ -33,7 +33,7 @@ import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableErr
 @Composable
 fun CountryListScreen(
     viewModel: CountryListViewModel = viewModel(factory = CountryListViewModel.Factory),
-    onCountryClick: (Country) -> Unit,
+    onCountryClick: (Int) -> Unit,
     onAboutClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -77,12 +77,12 @@ fun CountryListScreen(
 @Composable
 private fun CountryList(
     countries: List<Country>,
-    onCountryClick: (Country) -> Unit,
+    onCountryClick: (Int) -> Unit,
 ) {
     LazyColumn {
-        items(countries) { country ->
+        itemsIndexed(countries) { index, country ->
             Country(country) {
-                onCountryClick(country)
+                onCountryClick(index)
             }
         }
     }
