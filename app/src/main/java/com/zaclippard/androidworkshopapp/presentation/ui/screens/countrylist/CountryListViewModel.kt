@@ -36,7 +36,7 @@ class CountryListViewModel(
         viewModelScope.launch {
             val result = countryRepository.fetchCountries()
             _uiState.value = if (result.isSuccess) {
-                CountryListUiState.Data.Ready(result.getOrNull() ?: emptyList())
+                CountryListUiState.Ready(result.getOrNull() ?: emptyList())
             } else {
                 CountryListUiState.Error(
                     result.exceptionOrNull()?.message ?: "Unknown error. Please try again."
