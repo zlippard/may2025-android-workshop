@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -65,7 +66,12 @@ fun CountryListScreen(
         ) {
             when (val state = uiState) {
                 is CountryListUiState.Loading -> CircularProgressIndicator()
-                is CountryListUiState.Ready -> CountryList(state.countries, onCountryClick)
+                is CountryListUiState.Ready -> CountryList(false, state.countries, onCountryClick) {
+                    viewModel.handleIntent(CountryListIntent.Refresh)
+                }
+                is CountryListUiState.Refreshing -> CountryList(true, state.countries, onCountryClick) {
+                    // Do nothing - already refreshing
+                }
                 is CountryListUiState.Error -> RetryableError(state.message) {
                     viewModel.handleIntent(CountryListIntent.Retry)
                 }
@@ -74,15 +80,23 @@ fun CountryListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CountryList(
+    isRefreshing: Boolean,
     countries: List<Country>,
     onCountryClick: (Int) -> Unit,
+    onRefresh: () -> Unit,
 ) {
-    LazyColumn {
-        itemsIndexed(countries) { index, country ->
-            Country(country) {
-                onCountryClick(index)
+    PullToRefreshBox(
+        isRefreshing,
+        onRefresh,
+    ) {
+        LazyColumn {
+            itemsIndexed(countries) { index, country ->
+                Country(country) {
+                    onCountryClick(index)
+                }
             }
         }
     }

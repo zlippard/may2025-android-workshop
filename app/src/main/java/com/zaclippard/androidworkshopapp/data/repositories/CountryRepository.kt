@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CountryRepository {
     val countryListResultStream: Flow<Result<List<Country>>>
-    suspend fun fetchCountries()
+    suspend fun fetchCountries(forceNetworkFetch: Boolean)
     fun getCountry(index: Int): Country?
 }

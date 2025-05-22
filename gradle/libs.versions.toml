@@ -23,6 +23,7 @@ navigationCompose = "2.9.0"
 retrofit="2.9.0"
 moshi="1.15.0"
 ksp="2.0.21-1.0.27"
+room="2.7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +62,11 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-moshi = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 retrofit-moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 moshiCodeGen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
+
+# Room
+room-ktx = { module= "androidx.room:room-ktx", version.ref="room" }
+room-runtime = { module= "androidx.room:room-runtime", version.ref="room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref="room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -74,6 +74,10 @@ dependencies {
     implementation(libs.retrofit.moshi.converter)
     ksp(libs.moshiCodeGen)
 
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)

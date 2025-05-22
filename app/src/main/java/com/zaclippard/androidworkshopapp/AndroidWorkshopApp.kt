@@ -2,6 +2,7 @@ package com.zaclippard.androidworkshopapp
 
 import android.app.Application
 import com.squareup.moshi.Moshi
+import com.zaclippard.androidworkshopapp.data.database.CountryDatabase
 import com.zaclippard.androidworkshopapp.data.network.CountryService
 import com.zaclippard.androidworkshopapp.data.network.adapters.CountryAdapter
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
@@ -18,6 +19,7 @@ class AndroidWorkshopApp : Application() {
 
     lateinit var countryService: CountryService
     lateinit var countryRepository: CountryRepository
+    lateinit var countryDatabase: CountryDatabase
 
     override fun onCreate() {
         super.onCreate()
@@ -27,6 +29,7 @@ class AndroidWorkshopApp : Application() {
             .build()
 
         countryService = retrofit.create(CountryService::class.java)
-        countryRepository = CountryRepositoryImpl(countryService)
+        countryDatabase = CountryDatabase.buildDatabase(applicationContext)
+        countryRepository = CountryRepositoryImpl(countryService, countryDatabase.countryDao())
     }
 }

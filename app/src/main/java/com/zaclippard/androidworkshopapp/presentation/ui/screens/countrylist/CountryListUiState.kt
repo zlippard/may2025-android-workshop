@@ -7,5 +7,7 @@ sealed interface CountryListUiState {
 
     data class Ready(val countries: List<Country>) : CountryListUiState
 
+    data class Refreshing(val countries: List<Country>) : CountryListUiState
+
     data class Error(val message: String) : CountryListUiState
 }

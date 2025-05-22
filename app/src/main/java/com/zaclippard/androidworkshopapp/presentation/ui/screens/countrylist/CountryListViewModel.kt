@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
+import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Refresh
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Retry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,14 +41,20 @@ class CountryListViewModel(
     fun handleIntent(intent: CountryListIntent) {
         when (intent) {
             is Retry -> fetchCountries()
+            is Refresh -> fetchCountries(forceNetworkFetch = true)
         }
     }
 
-    private fun fetchCountries() {
-        _uiState.value = CountryListUiState.Loading
+    private fun fetchCountries(forceNetworkFetch: Boolean = false) {
+        val state = _uiState.value
+        _uiState.value = if (forceNetworkFetch && state is CountryListUiState.Ready) {
+            CountryListUiState.Refreshing(state.countries)
+        } else {
+            CountryListUiState.Loading
+        }
 
         viewModelScope.launch {
-            countryRepository.fetchCountries()
+            countryRepository.fetchCountries(forceNetworkFetch)
         }
     }
 
