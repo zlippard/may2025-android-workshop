@@ -1,25 +1,37 @@
 package com.zaclippard.androidworkshopapp.data.repositories
 
+import android.util.Log
 import com.zaclippard.androidworkshopapp.data.network.CountryService
 import com.zaclippard.androidworkshopapp.domain.Country
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class CountryRepositoryImpl(
     private val service: CountryService,
 ) : CountryRepository {
     // In-memory cache
-    private val countries = mutableListOf<Country>()
+    private val _countryListStream = MutableStateFlow<List<Country>>(emptyList())
 
-    override suspend fun fetchCountries(): Result<List<Country>> = runCatching {
-        val countriesResponse = service.getAllCountries()
+    override val countryListStream: Flow<List<Country>> = _countryListStream.asStateFlow()
 
-        if (countriesResponse.isSuccessful) {
-            countries.clear()
-            countries.addAll(countriesResponse.body() ?: emptyList())
-            countries
-        } else {
-            throw Exception(countriesResponse.errorBody()?.string() ?: "Unknown error")
+    override suspend fun fetchCountries() {
+        runCatching {
+            val countriesResponse = service.getAllCountries()
+
+            if (countriesResponse.isSuccessful) {
+                countriesResponse.body() ?: emptyList()
+            } else {
+                val message = countriesResponse.errorBody()?.string() ?: "Unknown error"
+                Log.e("WORKSHOP", message)
+                _countryListStream.value
+            }
+        }.onSuccess {
+            _countryListStream.value = it
+        }.onFailure {
+            Log.e("WORKSHOP", it.message ?: "Unknown error")
         }
     }
 
-    override fun getCountry(index: Int): Country? = countries.getOrNull(index)
+    override fun getCountry(index: Int): Country? = _countryListStream.value.getOrNull(index)
 }
