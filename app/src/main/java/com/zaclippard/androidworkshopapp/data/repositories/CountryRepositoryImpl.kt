@@ -17,10 +17,10 @@ class CountryRepositoryImpl(
     override val countryListResultStream: Flow<Result<List<Country>>> = _countryListResultStream.asStateFlow()
 
     override suspend fun fetchCountries(forceNetworkFetch: Boolean) {
-        if (forceNetworkFetch) { countryDao.deleteAllCountries() }
-
         _countryListResultStream.value = runCatching {
-            countryDao.getAllCountries().ifEmpty {
+            val countriesFromDb = countryDao.getAllCountries()
+
+            if (forceNetworkFetch || countriesFromDb.isEmpty()) {
                 val countriesResponse = service.getAllCountries()
 
                 if (countriesResponse.isSuccessful) {
@@ -30,6 +30,8 @@ class CountryRepositoryImpl(
                 } else {
                     throw (Exception(countriesResponse.errorBody()?.string() ?: "Unknown error"))
                 }
+            } else {
+                countriesFromDb
             }
         }
     }

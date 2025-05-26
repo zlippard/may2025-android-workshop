@@ -9,9 +9,11 @@ import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Refresh
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Retry
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CountryListViewModel(
     val countryRepository: CountryRepository,
@@ -55,6 +57,12 @@ class CountryListViewModel(
 
         viewModelScope.launch {
             countryRepository.fetchCountries(forceNetworkFetch)
+
+            withContext(Dispatchers.Main) {
+                (_uiState.value as? CountryListUiState.Refreshing)?.let { state ->
+                    _uiState.value = CountryListUiState.Ready(state.countries)
+                }
+            }
         }
     }
 
