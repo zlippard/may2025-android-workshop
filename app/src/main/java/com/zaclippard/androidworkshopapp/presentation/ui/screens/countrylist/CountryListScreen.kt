@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,7 @@ fun CountryListScreen(
     viewModel: CountryListViewModel = viewModel(factory = CountryListViewModel.Factory),
     onCountryClick: (Int) -> Unit,
     onAboutClick: () -> Unit,
+    onSettingsClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,6 +57,12 @@ fun CountryListScreen(
                         Icon(
                             imageVector = Icons.Filled.Info,
                             contentDescription = stringResource(id = R.string.about_content_description),
+                        )
+                    }
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = stringResource(id = R.string.settings_content_description),
                         )
                     }
                 }

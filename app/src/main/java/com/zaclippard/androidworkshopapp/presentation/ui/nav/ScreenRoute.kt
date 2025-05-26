@@ -29,4 +29,8 @@ sealed interface ScreenRoute {
             return "$path/$name"
         }
     }
+
+    data object Settings : ScreenRoute {
+        override val route = "settings"
+    }
 }

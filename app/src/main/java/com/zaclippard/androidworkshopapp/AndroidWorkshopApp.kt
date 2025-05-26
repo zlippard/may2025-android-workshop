@@ -5,6 +5,8 @@ import com.squareup.moshi.Moshi
 import com.zaclippard.androidworkshopapp.data.database.CountryDatabase
 import com.zaclippard.androidworkshopapp.data.network.CountryService
 import com.zaclippard.androidworkshopapp.data.network.adapters.CountryAdapter
+import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefs
+import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefsImpl
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepositoryImpl
 import retrofit2.Retrofit
@@ -17,6 +19,7 @@ class AndroidWorkshopApp : Application() {
 
     private lateinit var retrofit: Retrofit
 
+    lateinit var prefs: AndroidWorkshopPrefs
     lateinit var countryService: CountryService
     lateinit var countryRepository: CountryRepository
     lateinit var countryDatabase: CountryDatabase
@@ -28,8 +31,9 @@ class AndroidWorkshopApp : Application() {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
+        prefs = AndroidWorkshopPrefsImpl(applicationContext)
         countryService = retrofit.create(CountryService::class.java)
         countryDatabase = CountryDatabase.buildDatabase(applicationContext)
-        countryRepository = CountryRepositoryImpl(countryService, countryDatabase.countryDao())
+        countryRepository = CountryRepositoryImpl(countryService, countryDatabase.countryDao(), prefs)
     }
 }

@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.about.AboutScreen
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrydetails.CountryDetailsScreen
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListScreen
+import com.zaclippard.androidworkshopapp.presentation.ui.screens.settings.SettingsScreen
 
 @Composable
 fun AppNavHost() {
@@ -23,6 +24,9 @@ fun AppNavHost() {
                 onAboutClick = {
                     navController.navigate(ScreenRoute.About.createRoute("Zac"))
                 },
+                onSettingsClick = {
+                    navController.navigate(ScreenRoute.Settings.route)
+                }
             )
         }
 
@@ -52,6 +56,12 @@ fun AppNavHost() {
             val name = backStackEntry.arguments?.getString(ScreenRoute.About.NAME_PARAM)
                 ?: throw Exception("Name is required!")
             AboutScreen(name) { navController.navigateUp() }
+        }
+
+        composable(ScreenRoute.Settings.route) {
+            SettingsScreen {
+                navController.navigateUp()
+            }
         }
     }
 }

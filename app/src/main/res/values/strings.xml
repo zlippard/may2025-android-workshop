@@ -11,4 +11,8 @@
     <string name="about_title">About</string>
     <string name="about_content_description">About</string>
     <string name="favorite">Favorite</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_enable_local_storage">Enable Local Storage</string>
+    <string name="settings_enable_rotation">Enable Screen Rotation</string>
+    <string name="settings_content_description">Settings</string>
 </resources>

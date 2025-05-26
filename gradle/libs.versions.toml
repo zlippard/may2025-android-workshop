@@ -24,6 +24,7 @@ retrofit="2.9.0"
 moshi="1.15.0"
 ksp="2.0.21-1.0.27"
 room="2.7.1"
+datastore="1.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +68,9 @@ moshiCodeGen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref
 room-ktx = { module= "androidx.room:room-ktx", version.ref="room" }
 room-runtime = { module= "androidx.room:room-runtime", version.ref="room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref="room" }
+
+# DataStore
+datastore-prefs = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
