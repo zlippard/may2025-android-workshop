@@ -25,6 +25,7 @@ moshi="1.15.0"
 ksp="2.0.21-1.0.27"
 room="2.7.1"
 datastore="1.1.7"
+googlePlayServices="21.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,9 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref="room" }
 
 # DataStore
 datastore-prefs = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+# Google Play Services
+google-play-services = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

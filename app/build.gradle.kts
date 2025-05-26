@@ -80,6 +80,8 @@ dependencies {
 
     implementation(libs.datastore.prefs)
 
+    implementation(libs.google.play.services)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)

@@ -15,4 +15,11 @@
     <string name="settings_enable_local_storage">Enable Local Storage</string>
     <string name="settings_enable_rotation">Enable Screen Rotation</string>
     <string name="settings_content_description">Settings</string>
+    <string name="location_permanently_denied_text">The Location permission is denied. To utilize this feature, please enable the Location permission via the App Settings.</string>
+    <string name="go_to_app_settings_button_text">Go to App Settings</string>
+    <string name="location_permission_rationale">In order to use this feature and quickly filter to your country, this app needs permission to the device\'s location.</string>
+    <string name="accept_location_permission_button_text">Accept</string>
+    <string name="location_content_description">Location</string>
+    <string name="show_location_button_text">Show Location</string>
+    <string name="dismiss_button_text">Dismiss</string>
 </resources>
