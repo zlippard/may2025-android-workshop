@@ -4,7 +4,7 @@ import com.zaclippard.androidworkshopapp.domain.Country
 import kotlinx.coroutines.flow.Flow
 
 interface CountryRepository {
-    val countryListStream: Flow<List<Country>>
+    val countryListResultStream: Flow<Result<List<Country>>>
     suspend fun fetchCountries()
     fun getCountry(index: Int): Country?
 }

@@ -22,13 +22,15 @@ class CountryListViewModel(
 
     init {
         viewModelScope.launch {
-            countryRepository.countryListStream
-                .collect { newState ->
-                    _uiState.value = if (newState.isNotEmpty()) {
-                        CountryListUiState.Ready(newState)
-                    } else {
-                        CountryListUiState.Error("No countries to show.")
-                    }
+            countryRepository.countryListResultStream
+                .collect { countryListResult ->
+                    countryListResult
+                        .onSuccess {
+                            _uiState.value = CountryListUiState.Ready(it)
+                        }
+                        .onFailure {
+                            _uiState.value = CountryListUiState.Error("No countries to show: ${it.message}")
+                        }
                 }
         }
 
