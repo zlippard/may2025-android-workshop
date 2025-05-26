@@ -31,8 +31,6 @@ class CountryRepositoryImpl(
                     throw (Exception(countriesResponse.errorBody()?.string() ?: "Unknown error"))
                 }
             }
-        } else {
-            countriesFromDb
         }
     }
 
