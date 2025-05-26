@@ -26,7 +26,7 @@ class CountryRepositoryImpl(
                 if (countriesResponse.isSuccessful) {
                     val newCountries = countriesResponse.body() ?: emptyList()
                     countryDao.addCountries(*newCountries.toTypedArray())
-                    newCountries
+                    countryDao.getAllCountries()
                 } else {
                     throw (Exception(countriesResponse.errorBody()?.string() ?: "Unknown error"))
                 }
