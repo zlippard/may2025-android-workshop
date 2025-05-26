@@ -43,4 +43,20 @@ class CountryRepositoryImpl(
             cachedCountries?.getOrNull(index)
         } else { null }
     }
+
+    override suspend fun markCountryAsFavorite(country: Country) {
+        _countryListResultStream.value.getOrNull()?.let {
+            val countries = it.toMutableList()
+            val countryIndex = _countryListResultStream.value.getOrNull()?.indexOf(country) ?: -1
+            if (countryIndex < 0) {
+                return
+            }
+
+            val updatedCountry = country.copy(isFavorite = country.isFavorite.not())
+            countries[countryIndex] = updatedCountry
+            countryDao.updateCountry(updatedCountry)
+            _countryListResultStream.value = Result.success(countryDao.getAllCountries())
+        }
+    }
+
 }

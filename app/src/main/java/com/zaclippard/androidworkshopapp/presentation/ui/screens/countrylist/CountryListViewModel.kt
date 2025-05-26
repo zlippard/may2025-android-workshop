@@ -7,10 +7,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
+import com.zaclippard.androidworkshopapp.domain.Country
+import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Favorite
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Refresh
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Retry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +24,7 @@ class CountryListViewModel(
 
     private val _uiState = MutableStateFlow<CountryListUiState>(CountryListUiState.Loading)
 
-    val uiState = _uiState.asStateFlow()
+    val uiState: StateFlow<CountryListUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -44,6 +47,13 @@ class CountryListViewModel(
         when (intent) {
             is Retry -> fetchCountries()
             is Refresh -> fetchCountries(forceNetworkFetch = true)
+            is Favorite -> markCountryAsFavorite(intent.country)
+        }
+    }
+
+    private fun markCountryAsFavorite(country: Country) {
+        viewModelScope.launch {
+            countryRepository.markCountryAsFavorite(country)
         }
     }
 
@@ -65,6 +75,7 @@ class CountryListViewModel(
             }
         }
     }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {

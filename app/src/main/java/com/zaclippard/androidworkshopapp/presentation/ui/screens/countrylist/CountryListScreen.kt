@@ -1,7 +1,9 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zaclippard.androidworkshopapp.R
 import com.zaclippard.androidworkshopapp.domain.Country
+import com.zaclippard.androidworkshopapp.presentation.ui.components.FavoriteStar
 import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableError
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,11 +69,25 @@ fun CountryListScreen(
         ) {
             when (val state = uiState) {
                 is CountryListUiState.Loading -> CircularProgressIndicator()
-                is CountryListUiState.Ready -> CountryList(false, state.countries, onCountryClick) {
-                    viewModel.handleIntent(CountryListIntent.Refresh)
+                is CountryListUiState.Ready -> CountryList(
+                    false,
+                    state.countries,
+                    onCountryClick,
+                    onRefresh = {
+                        viewModel.handleIntent(CountryListIntent.Refresh)
+                    },
+                ) { country ->
+                    viewModel.handleIntent(CountryListIntent.Favorite(country))
                 }
-                is CountryListUiState.Refreshing -> CountryList(true, state.countries, onCountryClick) {
-                    // Do nothing - already refreshing
+                is CountryListUiState.Refreshing -> CountryList(
+                    true,
+                    state.countries,
+                    onCountryClick,
+                    onRefresh = {
+                        // Do nothing - already refreshing
+                    },
+                ) { country ->
+                    viewModel.handleIntent(CountryListIntent.Favorite(country))
                 }
                 is CountryListUiState.Error -> RetryableError(state.message) {
                     viewModel.handleIntent(CountryListIntent.Retry)
@@ -87,6 +104,7 @@ private fun CountryList(
     countries: List<Country>,
     onCountryClick: (Int) -> Unit,
     onRefresh: () -> Unit,
+    onFavorite: (Country) -> Unit,
 ) {
     PullToRefreshBox(
         isRefreshing,
@@ -94,23 +112,34 @@ private fun CountryList(
     ) {
         LazyColumn {
             itemsIndexed(countries) { index, country ->
-                Country(country) {
-                    onCountryClick(index)
-                }
+                Country(
+                    country = country,
+                    onClick = {
+                        onCountryClick(index)
+                    },
+                    onFavorite = { onFavorite(country) }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun Country(country: Country, onClick: () -> Unit) {
+private fun Country(country: Country, onClick: () -> Unit, onFavorite: () -> Unit) {
     Card(
         modifier = Modifier.padding(8.dp).fillMaxWidth(),
         onClick = onClick,
     ) {
-        Column {
-            Text(stringResource(R.string.country_name, country.name))
-            Text(stringResource(R.string.country_capital, country.capital))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.padding(8.dp).weight(1f)) {
+                Text(stringResource(R.string.country_name, country.name))
+                Text(stringResource(R.string.country_capital, country.capital))
+            }
+            FavoriteStar(country.isFavorite, onFavorite)
         }
     }
 }

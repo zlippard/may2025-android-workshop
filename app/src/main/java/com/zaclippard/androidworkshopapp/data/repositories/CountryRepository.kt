@@ -7,4 +7,5 @@ interface CountryRepository {
     val countryListResultStream: Flow<Result<List<Country>>>
     suspend fun fetchCountries(forceNetworkFetch: Boolean)
     fun getCountry(index: Int): Country?
+    suspend fun markCountryAsFavorite(country: Country)
 }

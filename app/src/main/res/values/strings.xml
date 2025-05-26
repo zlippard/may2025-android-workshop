@@ -10,4 +10,5 @@
     <string name="country_flag_content_description">Country Flag</string>
     <string name="about_title">About</string>
     <string name="about_content_description">About</string>
+    <string name="favorite">Favorite</string>
 </resources>
