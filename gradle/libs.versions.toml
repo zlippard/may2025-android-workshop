@@ -26,6 +26,8 @@ ksp="2.0.21-1.0.27"
 room="2.7.1"
 datastore="1.1.7"
 googlePlayServices="21.3.0"
+hilt="2.56.2"
+androidXHilt="1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +78,11 @@ datastore-prefs = { group = "androidx.datastore", name = "datastore-preferences"
 # Google Play Services
 google-play-services = { group = "com.google.android.gms", name = "play-services-location", version.ref = "googlePlayServices" }
 
+# Hilt
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+androidx-hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -83,4 +90,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "kotlin-parcelize" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 

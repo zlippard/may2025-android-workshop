@@ -1,17 +1,16 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
 import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefs
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingsViewModel(private val prefs: AndroidWorkshopPrefs) : ViewModel() {
+@HiltViewModel
+class SettingsViewModel @Inject constructor(private val prefs: AndroidWorkshopPrefs) : ViewModel() {
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -47,21 +46,6 @@ class SettingsViewModel(private val prefs: AndroidWorkshopPrefs) : ViewModel() {
     private fun toggleRotation() {
         viewModelScope.launch {
             prefs.toggleRotation()
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras,
-            ): T {
-                val app = checkNotNull(extras[APPLICATION_KEY]) as AndroidWorkshopApp
-                return SettingsViewModel(
-                    app.prefs,
-                ) as T
-            }
         }
     }
 }

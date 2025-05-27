@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -33,8 +33,10 @@ import com.zaclippard.androidworkshopapp.domain.Country
 @Composable
 fun CountryDetailsScreen(
     countryIndex: Int,
-    viewModel: CountryDetailsViewModel = viewModel(
-        factory = CountryDetailsViewModel.createFactory(countryIndex)
+    viewModel: CountryDetailsViewModel = hiltViewModel(
+        creationCallback = { factory: CountryDetailsViewModel.Factory ->
+            factory.create(countryIndex)
+        }
     ),
     onNavigateUp: () -> Unit,
 ) {

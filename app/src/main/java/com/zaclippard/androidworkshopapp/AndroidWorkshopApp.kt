@@ -1,39 +1,7 @@
 package com.zaclippard.androidworkshopapp
 
 import android.app.Application
-import com.squareup.moshi.Moshi
-import com.zaclippard.androidworkshopapp.data.database.CountryDatabase
-import com.zaclippard.androidworkshopapp.data.network.CountryService
-import com.zaclippard.androidworkshopapp.data.network.adapters.CountryAdapter
-import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefs
-import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefsImpl
-import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
-import com.zaclippard.androidworkshopapp.data.repositories.CountryRepositoryImpl
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import dagger.hilt.android.HiltAndroidApp
 
-class AndroidWorkshopApp : Application() {
-    private val moshi = Moshi.Builder()
-        .add(CountryAdapter())
-        .build()
-
-    private lateinit var retrofit: Retrofit
-
-    lateinit var prefs: AndroidWorkshopPrefs
-    lateinit var countryService: CountryService
-    lateinit var countryRepository: CountryRepository
-    lateinit var countryDatabase: CountryDatabase
-
-    override fun onCreate() {
-        super.onCreate()
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://restcountries.com/")
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-
-        prefs = AndroidWorkshopPrefsImpl(applicationContext)
-        countryService = retrofit.create(CountryService::class.java)
-        countryDatabase = CountryDatabase.buildDatabase(applicationContext)
-        countryRepository = CountryRepositoryImpl(countryService, countryDatabase.countryDao(), prefs)
-    }
-}
+@HiltAndroidApp
+class AndroidWorkshopApp : Application()

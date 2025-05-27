@@ -9,12 +9,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
+import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefs
 import com.zaclippard.androidworkshopapp.presentation.ui.nav.AppNavHost
 import com.zaclippard.androidworkshopapp.presentation.ui.theme.AndroidWorkshopAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var prefs: AndroidWorkshopPrefs
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +28,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
 
         lifecycleScope.launch {
-            (application as AndroidWorkshopApp).prefs.rotationEnabledStream
+            prefs.rotationEnabledStream
                 .collect { rotationEnabled ->
                     requestedOrientation = if (rotationEnabled) {
                         SCREEN_ORIENTATION_SENSOR

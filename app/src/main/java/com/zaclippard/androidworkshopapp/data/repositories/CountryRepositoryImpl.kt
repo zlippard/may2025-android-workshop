@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class CountryRepositoryImpl(
+class CountryRepositoryImpl @Inject constructor(
     private val service: CountryService,
     private val countryDao: CountryDao,
     private val prefs: AndroidWorkshopPrefs,

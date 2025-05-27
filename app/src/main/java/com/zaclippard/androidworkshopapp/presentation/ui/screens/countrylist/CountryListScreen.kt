@@ -48,7 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.location.LocationServices
 import com.zaclippard.androidworkshopapp.R
 import com.zaclippard.androidworkshopapp.domain.Country
@@ -59,7 +59,7 @@ import com.zaclippard.androidworkshopapp.presentation.ui.components.permissions.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryListScreen(
-    viewModel: CountryListViewModel = viewModel(factory = CountryListViewModel.Factory),
+    viewModel: CountryListViewModel = hiltViewModel(),
     onCountryClick: (Int) -> Unit,
     onAboutClick: () -> Unit,
     onSettingsClick: () -> Unit,

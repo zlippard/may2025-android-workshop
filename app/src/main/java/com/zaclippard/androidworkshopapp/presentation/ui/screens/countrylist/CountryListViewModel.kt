@@ -1,24 +1,23 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.zaclippard.androidworkshopapp.AndroidWorkshopApp
 import com.zaclippard.androidworkshopapp.data.repositories.CountryRepository
 import com.zaclippard.androidworkshopapp.domain.Country
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Favorite
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Refresh
 import com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist.CountryListIntent.Retry
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CountryListViewModel(
+@HiltViewModel
+class CountryListViewModel @Inject constructor(
     val countryRepository: CountryRepository,
 ) : ViewModel() {
 
@@ -72,22 +71,6 @@ class CountryListViewModel(
                 (_uiState.value as? CountryListUiState.Refreshing)?.let { state ->
                     _uiState.value = CountryListUiState.Ready(state.countries)
                 }
-            }
-        }
-    }
-
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras,
-            ): T {
-                val app = checkNotNull(extras[APPLICATION_KEY]) as AndroidWorkshopApp
-                return CountryListViewModel(
-                    app.countryRepository,
-                ) as T
             }
         }
     }
