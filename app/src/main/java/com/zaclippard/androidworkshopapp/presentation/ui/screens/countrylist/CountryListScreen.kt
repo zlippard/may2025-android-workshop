@@ -1,16 +1,11 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist
 
 import android.Manifest
-import android.content.Intent
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
-import androidx.activity.compose.LocalActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,12 +36,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +47,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.location.LocationServices
@@ -62,6 +54,7 @@ import com.zaclippard.androidworkshopapp.R
 import com.zaclippard.androidworkshopapp.domain.Country
 import com.zaclippard.androidworkshopapp.presentation.ui.components.FavoriteStar
 import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableError
+import com.zaclippard.androidworkshopapp.presentation.ui.components.permissions.DeterminePermissionComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -189,7 +182,8 @@ private fun Country(country: Country, onClick: () -> Unit, onFavorite: () -> Uni
 @Composable
 private fun LocationButton() {
     var readyToShowLocation by remember { mutableStateOf(false) }
-    var lastAddressFound by remember { mutableStateOf<Address?>(null) }
+    var addressText: String? by remember { mutableStateOf(null) }
+    val context = LocalContext.current
 
     Button(
         onClick = { readyToShowLocation = true },
@@ -198,153 +192,92 @@ private fun LocationButton() {
     }
 
     if (readyToShowLocation) {
-        DetermineLocationComponent { address ->
-            lastAddressFound = address
-            readyToShowLocation = false
-        }
+        DeterminePermissionComponent(
+            permission = Manifest.permission.ACCESS_COARSE_LOCATION,
+            deniedText = stringResource(R.string.location_permanently_denied_text),
+            rationaleText = stringResource(R.string.location_permission_rationale),
+            onPermissionGranted = {
+                readyToShowLocation = false
+                getLocationAddress(context) { address ->
+                    addressText = address?.let { "Address:\n\n$address" } ?: "No address found."
+                }
+            },
+            onPermissionDenied = {
+                readyToShowLocation = false
+            }
+        )
     }
 
-    lastAddressFound?.let { address ->
-        BasicAlertDialog(
-            onDismissRequest = {
-                lastAddressFound = null
-            }
-        ) {
-            Surface(
-                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
-                shape = MaterialTheme.shapes.large,
-                tonalElevation = AlertDialogDefaults.TonalElevation
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Address found:\n\n$address")
-                    Button(onClick = {
-                        lastAddressFound = null
-                    }) {
-                        Text(stringResource(R.string.dismiss_button_text))
-                    }
-                }
-            }
+    addressText?.let {
+        LocationAlertDialog(it) {
+            addressText = null
         }
     }
 }
 
-@Composable
-private fun DetermineLocationComponent(
-    onLastAddressFound: (Address?) -> Unit,
-) {
-    val activity = LocalActivity.current
-    val context = LocalContext.current
-    val locationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
-    var locationPermissionState by rememberSaveable {
-        mutableStateOf(PermissionState.ASK)
-    }
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        locationPermissionState = if (isGranted) {
-            PermissionState.GRANTED
-        } else {
-            PermissionState.PERMANENTLY_DENIED
-        }
-    }
+private fun getLocationAddress(context: Context, onAddress: (Address?) -> Unit) {
+    val permissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+    if (permissionStatus != PackageManager.PERMISSION_GRANTED) { return }
 
-    when (locationPermissionState) {
-        PermissionState.ASK -> {
-            LaunchedEffect(Unit) {
-                val locationPermissionStatus = ContextCompat.checkSelfPermission(
-                    context,
-                    locationPermission,
-                )
-                locationPermissionState =
-                    if (locationPermissionStatus == PackageManager.PERMISSION_GRANTED) {
-                        PermissionState.GRANTED
-                    } else {
-                        PermissionState.DENIED
-                    }
+    LocationServices
+        .getFusedLocationProviderClient(context)
+        .lastLocation
+        .addOnSuccessListener { location ->
+            if (location == null) {
+                onAddress(null)
+                return@addOnSuccessListener
             }
-        }
 
-        PermissionState.GRANTED -> {
-            LocationServices
-                .getFusedLocationProviderClient(context)
-                .lastLocation
-                .addOnSuccessListener { location ->
-                    if (location == null) {
-                        onLastAddressFound(null)
-                        return@addOnSuccessListener
-                    }
+            val geocoder = Geocoder(context, Locale.current.platformLocale)
 
-                    val geocoder = Geocoder(context, Locale.current.platformLocale)
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val geocoderListener = @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-                        object : Geocoder.GeocodeListener {
-                            override fun onGeocode(addresses: List<Address?>) {
-                                addresses.firstOrNull()?.let { address ->
-                                    onLastAddressFound(address)
-                                }
-                            }
-                        }
-                        geocoder.getFromLocation(location.latitude, location.longitude, 1, geocoderListener)
-                    } else {
-                        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                        addresses?.firstOrNull()?.let { address ->
-                            onLastAddressFound(address)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val geocoderListener = @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+                object : Geocoder.GeocodeListener {
+                    override fun onGeocode(addresses: List<Address?>) {
+                        addresses.firstOrNull()?.let { address ->
+                            onAddress(address)
                         }
                     }
                 }
-        }
-
-        PermissionState.DENIED -> {
-            val shouldShowRationale =
-                activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity,
-                    locationPermission,
+                geocoder.getFromLocation(
+                    location.latitude,
+                    location.longitude,
+                    1,
+                    geocoderListener
                 )
-            if (shouldShowRationale) {
-                LocationPermissionRationale { launcher.launch(locationPermission) }
             } else {
-                launcher.launch(locationPermission)
-            }
-        }
-
-        PermissionState.PERMANENTLY_DENIED -> {
-            LocationPermanentlyDeniedComponent {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", context.packageName, null)
+                val addresses =
+                    geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                addresses?.firstOrNull()?.let { address ->
+                    onAddress(address)
                 }
-                context.startActivity(intent)
+            }
+        }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LocationAlertDialog(
+    addressText: String,
+    onDismiss: () -> Unit,
+) {
+    BasicAlertDialog(
+        onDismissRequest = onDismiss,
+    ) {
+        Surface(
+            modifier = Modifier.wrapContentWidth().wrapContentHeight(),
+            shape = MaterialTheme.shapes.large,
+            tonalElevation = AlertDialogDefaults.TonalElevation
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(addressText)
+                Button(onClick = onDismiss) {
+                    Text(stringResource(R.string.dismiss_button_text))
+                }
             }
         }
     }
-}
-
-@Composable
-private fun LocationPermanentlyDeniedComponent(onGoToAppSettings: () -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(R.string.location_permanently_denied_text))
-        Button(onClick = onGoToAppSettings) {
-            Text(stringResource(R.string.go_to_app_settings_button_text))
-        }
-    }
-}
-
-@Composable
-private fun LocationPermissionRationale(onAcceptLocationPermissionClick: () -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(stringResource(R.string.location_permission_rationale))
-        Button(onClick = onAcceptLocationPermissionClick) {
-            Text(stringResource(R.string.accept_location_permission_button_text))
-        }
-    }
-}
-
-private enum class PermissionState {
-    ASK,
-    GRANTED,
-    DENIED,
-    PERMANENTLY_DENIED,
 }
