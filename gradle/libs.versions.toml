@@ -31,6 +31,7 @@ androidXHilt="1.2.0"
 mockk="1.14.2"
 kotlinXCoroutinesTest="1.10.2"
 turbine="1.2.0"
+paparazzi="2.0.0-alpha01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -103,4 +104,4 @@ kotlin-parcelize = { id = "kotlin-parcelize" }
 androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-
+paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }

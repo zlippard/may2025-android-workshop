@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.paparazzi)
 }
 
 android {

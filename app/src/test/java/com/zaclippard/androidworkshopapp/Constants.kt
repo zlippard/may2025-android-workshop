@@ -9,6 +9,7 @@ val countryList = listOf(
         flagUrl = "https://flagcdn.com/w320/us.png",
         population = 1_000_000L,
         area = 1_000_000F,
+        isFavorite = true,
     ),
     Country(
         name = "Canada",
