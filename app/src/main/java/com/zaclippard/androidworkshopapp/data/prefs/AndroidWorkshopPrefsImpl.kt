@@ -20,13 +20,13 @@ class AndroidWorkshopPrefsImpl @Inject constructor(
     override val localStorageEnabledStream: Flow<Boolean> = dataStore.data.catch {
         emit(emptyPreferences())
     }.map {
-        it[STORE_KEY_LOCAL_STORAGE] == true
+        it[STORE_KEY_LOCAL_STORAGE] != false
     }
 
     override val rotationEnabledStream: Flow<Boolean> = dataStore.data.catch {
         emit(emptyPreferences())
     }.map {
-        it[STORE_KEY_ROTATION] == true
+        it[STORE_KEY_ROTATION] != false
     }
 
     override suspend fun toggleLocalStorage() {

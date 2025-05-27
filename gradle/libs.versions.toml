@@ -28,6 +28,9 @@ datastore="1.1.7"
 googlePlayServices="21.3.0"
 hilt="2.56.2"
 androidXHilt="1.2.0"
+mockk="1.14.2"
+kotlinXCoroutinesTest="1.10.2"
+turbine="1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -82,6 +85,15 @@ google-play-services = { group = "com.google.android.gms", name = "play-services
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidXHilt" }
+
+# MockK
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+# KotlinX Coroutines Test
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinXCoroutinesTest" }
+
+# Turbine
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
