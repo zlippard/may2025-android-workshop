@@ -21,9 +21,9 @@ import com.zaclippard.androidworkshopapp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PermanentlyDeniedComponent(
-    deniedText: String,
-    onGoToAppSettings: () -> Unit,
+fun PermissionRationaleDialog(
+    rationaleText: String,
+    onAcceptPermissionClick: () -> Unit,
     onCancel: () -> Unit,
 ) {
     BasicAlertDialog(onDismissRequest = onCancel) {
@@ -36,10 +36,10 @@ internal fun PermanentlyDeniedComponent(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.Companion.CenterHorizontally
             ) {
-                Text(deniedText)
+                Text(rationaleText)
                 Row {
-                    Button(onClick = onGoToAppSettings) {
-                        Text(stringResource(R.string.go_to_app_settings_button_text))
+                    Button(onClick = onAcceptPermissionClick) {
+                        Text(stringResource(R.string.accept_permission_button_text))
                     }
                     Button(onClick = onCancel) {
                         Text(stringResource(R.string.cancel_button_text))

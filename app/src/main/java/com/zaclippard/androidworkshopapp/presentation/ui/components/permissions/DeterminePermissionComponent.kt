@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 @Composable
-internal fun DeterminePermissionComponent(
+fun DeterminePermissionComponent(
     permission: String,
     deniedText: String,
     rationaleText: String,
@@ -67,7 +67,7 @@ internal fun DeterminePermissionComponent(
                     permission,
                 )
             if (shouldShowRationale) {
-                PermissionRationale(
+                PermissionRationaleDialog(
                     rationaleText,
                     onAcceptPermissionClick = { launcher.launch(permission) },
                     onCancel = onPermissionDenied,
@@ -78,7 +78,7 @@ internal fun DeterminePermissionComponent(
         }
 
         PermissionState.PERMANENTLY_DENIED -> {
-            PermanentlyDeniedComponent(
+            PermanentlyDeniedDialog(
                 deniedText,
                 onGoToAppSettings = {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
