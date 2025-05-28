@@ -21,11 +21,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.zaclippard.androidworkshopapp.R
+
+const val ENABLE_LOCAL_STORAGE_TOGGLE_TAG = "ENABLE_LOCAL_STORAGE_TOGGLE_TAG"
+const val ENABLE_ROTATION_TOGGLE_TAG = "ENABLE_ROTATION_TOGGLE_TAG"
+const val TOGGLE_SWITCH_TAG = "TOGGLE_SWITCH_TAG"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,11 +64,13 @@ fun SettingsScreen(
                 label = stringResource(id = R.string.settings_enable_local_storage),
                 isToggleChecked = uiState.localStorageEnabled,
                 onToggleChanged = { viewModel.handleIntent(SettingsIntent.TOGGLE_LOCAL_STORAGE) },
+                modifier = Modifier.testTag(ENABLE_LOCAL_STORAGE_TOGGLE_TAG),
             )
             SettingsToggleRow(
                 label = stringResource(id = R.string.settings_enable_rotation),
                 isToggleChecked = uiState.rotationEnabled,
                 onToggleChanged = { viewModel.handleIntent(SettingsIntent.TOGGLE_ROTATION) },
+                modifier = Modifier.testTag(ENABLE_ROTATION_TOGGLE_TAG),
             )
         }
     }
@@ -86,6 +93,7 @@ fun SettingsToggleRow(
             style = MaterialTheme.typography.bodyLarge,
         )
         Switch(
+            modifier = Modifier.testTag(TOGGLE_SWITCH_TAG),
             checked = isToggleChecked,
             onCheckedChange = onToggleChanged,
         )

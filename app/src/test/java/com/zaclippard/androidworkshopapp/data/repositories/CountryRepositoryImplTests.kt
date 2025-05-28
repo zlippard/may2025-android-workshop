@@ -1,7 +1,7 @@
 package com.zaclippard.androidworkshopapp.data.repositories
 
 import app.cash.turbine.test
-import com.zaclippard.androidworkshopapp.countryList
+import com.zaclippard.androidworkshopapp.domain.sampleCountryList
 import com.zaclippard.androidworkshopapp.data.database.CountryDao
 import com.zaclippard.androidworkshopapp.data.network.CountryService
 import com.zaclippard.androidworkshopapp.data.prefs.AndroidWorkshopPrefs
@@ -26,7 +26,7 @@ class CountryRepositoryImplTests {
     @Test
     fun `init starts with empty list of countries`() = runTest {
         // Arrange
-        val expectedNetworkCountryList = countryList
+        val expectedNetworkCountryList = sampleCountryList
         val mockCountryService = mockk<CountryService> {
             coEvery { getAllCountries() } returns Response.success(expectedNetworkCountryList)
         }
@@ -52,7 +52,7 @@ class CountryRepositoryImplTests {
     @Test
     fun `fetchCountries updates list of countries`() = runTest {
         // Arrange
-        val expectedNetworkCountryList = countryList
+        val expectedNetworkCountryList = sampleCountryList
         var expectedDatabaseCountryList = emptyList<Country>()
         val mockCountryService = mockk<CountryService> {
             coEvery { getAllCountries() } returns Response.success(expectedNetworkCountryList)
@@ -83,7 +83,7 @@ class CountryRepositoryImplTests {
     @Test
     fun `fetchCountries updates list of countries with no local storage`() = runTest {
         // Arrange
-        val expectedNetworkCountryList = countryList
+        val expectedNetworkCountryList = sampleCountryList
         val mockCountryService = mockk<CountryService> {
             coEvery { getAllCountries() } returns Response.success(expectedNetworkCountryList)
         }
@@ -107,7 +107,7 @@ class CountryRepositoryImplTests {
     @Test
     fun `getCountry returns country`() = runTest {
         // Arrange
-        val expectedCountryList = countryList
+        val expectedCountryList = sampleCountryList
         val mockCountryService = mockk<CountryService> {
             coEvery { getAllCountries() } returns Response.success(expectedCountryList)
         }
@@ -125,13 +125,13 @@ class CountryRepositoryImplTests {
         val country = sut.getCountry(1)
 
         // Assert
-        assertEquals(countryList[1], country)
+        assertEquals(sampleCountryList[1], country)
     }
 
     @Test
     fun `getCountry returns null when no countries cached`() = runTest {
         // Arrange
-        val expectedCountryList = countryList
+        val expectedCountryList = sampleCountryList
         val mockCountryService = mockk<CountryService> {
             coEvery { getAllCountries() } returns Response.success(expectedCountryList)
         }

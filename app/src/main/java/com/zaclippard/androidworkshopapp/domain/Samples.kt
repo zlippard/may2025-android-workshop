@@ -1,8 +1,6 @@
-package com.zaclippard.androidworkshopapp
+package com.zaclippard.androidworkshopapp.domain
 
-import com.zaclippard.androidworkshopapp.domain.Country
-
-val countryList = listOf(
+val sampleCountryList = listOf(
     Country(
         name = "USA",
         capital = "Washington DC",

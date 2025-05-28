@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
@@ -56,6 +57,10 @@ import com.zaclippard.androidworkshopapp.domain.Country
 import com.zaclippard.androidworkshopapp.presentation.ui.components.FavoriteStar
 import com.zaclippard.androidworkshopapp.presentation.ui.components.RetryableError
 import com.zaclippard.androidworkshopapp.presentation.ui.components.permissions.DeterminePermissionComponent
+
+const val COUNTRY_LIST_TAG = "COUNTRY_LIST_TAG"
+const val COUNTRY_ROW_TAG = "COUNTRY_ROW_TAG"
+const val SETTINGS_ICON_TAG = "SETTINGS_ICON_TAG"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +87,7 @@ fun CountryListScreen(
                             contentDescription = stringResource(id = R.string.about_content_description),
                         )
                     }
-                    IconButton(onClick = onSettingsClick) {
+                    IconButton(modifier = Modifier.testTag(SETTINGS_ICON_TAG), onClick = onSettingsClick) {
                         Icon(
                             imageVector = Icons.Filled.Settings,
                             contentDescription = stringResource(id = R.string.settings_content_description),
@@ -95,7 +100,8 @@ fun CountryListScreen(
         Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .testTag(COUNTRY_LIST_TAG),
             contentAlignment = Alignment.Center,
         ) {
             when (val state = uiState) {
@@ -162,7 +168,7 @@ private fun CountryList(
 @Composable
 private fun Country(country: Country, onClick: () -> Unit, onFavorite: () -> Unit) {
     Card(
-        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+        modifier = Modifier.padding(8.dp).fillMaxWidth().testTag(COUNTRY_ROW_TAG),
         onClick = onClick,
     ) {
         Row(

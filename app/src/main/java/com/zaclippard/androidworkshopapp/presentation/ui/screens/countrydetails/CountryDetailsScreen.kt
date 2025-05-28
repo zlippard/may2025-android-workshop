@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +29,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.zaclippard.androidworkshopapp.R
 import com.zaclippard.androidworkshopapp.domain.Country
+
+const val COUNTRY_DETAILS_CAPITAL_TAG = "COUNTRY_DETAILS_CAPITAL_TAG"
+const val COUNTRY_DETAILS_POPULATION_TAG = "COUNTRY_DETAILS_POPULATION_TAG"
+const val COUNTRY_DETAILS_AREA_TAG = "COUNTRY_DETAILS_AREA_TAG"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,9 +87,18 @@ private fun CountryDetails(country: Country) {
         )
 
         Column {
-            Text(stringResource(R.string.country_capital, country.name))
-            Text(stringResource(R.string.country_population, country.population))
-            Text(stringResource(R.string.country_area, country.area))
+            Text(
+                modifier = Modifier.testTag(COUNTRY_DETAILS_CAPITAL_TAG),
+                text = stringResource(R.string.country_capital, country.capital),
+            )
+            Text(
+                modifier = Modifier.testTag(COUNTRY_DETAILS_POPULATION_TAG),
+                text = stringResource(R.string.country_population, country.population),
+            )
+            Text(
+                modifier = Modifier.testTag(COUNTRY_DETAILS_AREA_TAG),
+                text = stringResource(R.string.country_area, country.area),
+            )
         }
     }
 }

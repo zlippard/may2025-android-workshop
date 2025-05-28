@@ -1,6 +1,6 @@
 package com.zaclippard.androidworkshopapp.presentation.ui.screens.countrylist
 
-import com.zaclippard.androidworkshopapp.countryList
+import com.zaclippard.androidworkshopapp.domain.sampleCountryList
 import com.zaclippard.androidworkshopapp.presentation.ui.theme.AndroidWorkshopAppTheme
 import com.zaclippard.androidworkshopapp.rules.SnapshotTestRule
 import io.mockk.every
@@ -16,7 +16,7 @@ class CountryListScreenSnapshotTests {
 
     @Test
     fun snapshot() {
-        val testUiState = MutableStateFlow(CountryListUiState.Ready(countryList))
+        val testUiState = MutableStateFlow(CountryListUiState.Ready(sampleCountryList))
         val mockViewModel = mockk<CountryListViewModel> {
             every { uiState } returns testUiState
         }
