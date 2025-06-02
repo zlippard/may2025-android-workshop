@@ -24,11 +24,19 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.ImageLoader
 import coil3.compose.AsyncImage
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.zaclippard.androidworkshopapp.R
 import com.zaclippard.androidworkshopapp.domain.Country
+import okhttp3.OkHttpClient
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 const val COUNTRY_DETAILS_CAPITAL_TAG = "COUNTRY_DETAILS_CAPITAL_TAG"
 const val COUNTRY_DETAILS_POPULATION_TAG = "COUNTRY_DETAILS_POPULATION_TAG"
@@ -76,15 +84,9 @@ fun CountryDetailsScreen(
 
 @Composable
 private fun CountryDetails(country: Country) {
+
     Row(modifier = Modifier.fillMaxWidth()) {
-        AsyncImage(
-            modifier = Modifier.height(40.dp),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(country.flagUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = stringResource(R.string.country_flag_content_description),
-        )
+        CountryFlagAsyncImage(country.flagUrl)
 
         Column {
             Text(
@@ -101,4 +103,49 @@ private fun CountryDetails(country: Country) {
             )
         }
     }
+}
+
+@Composable
+private fun CountryFlagAsyncImage(url: String) {
+    // Create a trust manager that does not validate certificate chains
+    val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+        override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+        override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+    })
+
+    // Install the all-trusting trust manager
+    val sslContext = SSLContext.getInstance("SSL")
+    sslContext.init(null, trustAllCerts, SecureRandom())
+
+    // Create an ssl socket factory with our all-trusting manager
+    val sslSocketFactory = sslContext.socketFactory
+
+    // Create OkHttpClient with the custom SSL socket factory
+    val okHttpClient = OkHttpClient.Builder()
+        .sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+        .hostnameVerifier { _, _ -> true }
+        .build()
+
+    val imageLoader = ImageLoader.Builder(LocalContext.current)
+        .components {
+            add(
+                OkHttpNetworkFetcherFactory(
+                    callFactory = {
+                        okHttpClient
+                    }
+                )
+            )
+        }
+        .build()
+
+    AsyncImage(
+        modifier = Modifier.height(40.dp),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(url)
+            .crossfade(true)
+            .build(),
+        contentDescription = stringResource(R.string.country_flag_content_description),
+        imageLoader = imageLoader,
+    )
 }
